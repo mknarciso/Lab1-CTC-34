@@ -7,7 +7,7 @@ public class LabForster {
 	static List<Noh> nohs = new ArrayList<Noh>();
 	
 	public void getAFNDfromRegex(String regex){
-		// 1º passo
+		// 1ï¿½ passo
 		int indexNohs = 0;
 		Noh nohInicial = new Noh(indexNohs++);
 		Noh nohFinal = new Noh(indexNohs++);
@@ -27,7 +27,7 @@ public class LabForster {
 				String aresta = caminho.getArco();
 				//System.out.println(noh.getName() + "->" + caminho.getDestino().getName() + ": " + aresta);
 
-				//	2º passo - Quebra de Uniões
+				//	2ï¿½ passo - Quebra de Uniï¿½es
 				if(regexIsUnion(aresta)){
 					String lang1, lang2;
 					Noh nohDestino = caminho.getDestino();
@@ -39,7 +39,7 @@ public class LabForster {
 					noh.addCaminho(nohDestino, lang2);
 				}
 			
-				//3º passo - Conferir fecho de Kleene
+				//3ï¿½ passo - Conferir fecho de Kleene
 				else if(regexIsKleene(aresta)){
 					String arestaSemAsterisco = aresta.substring(0,aresta.length()-1);
 					Noh nohIntermediario = new Noh(indexNohs++);
@@ -51,13 +51,13 @@ public class LabForster {
 					nohs.add(nohIntermediario);
 				}
 				
-				//4º passo - remover parênteses, se houver
+				//4ï¿½ passo - remover parï¿½nteses, se houver
 				else if(regexIsInParenthesis(aresta)){
 					String novoArco = aresta.substring(1,aresta.length()-1);
 					caminho.changeArco(novoArco);
 				}	
 				
-				//5º passo - Quebra de Concatenações
+				//5ï¿½ passo - Quebra de Concatenaï¿½ï¿½es
 				else if (aresta.length() > 1){
 					String lang1, lang2;
 					Noh nohIntermediario = new Noh(indexNohs++);
@@ -226,12 +226,29 @@ public class LabForster {
 		return !pilhaChar.isEmpty();	
 	}
 	
+	static public void printEClosure(){
+	    int j=0;
+	    System.out.println("e-Closures:");
+	    while(j<nohs.size()){
+	        System.out.print(nohs.get(j).getName()+": ");
+	        int i=0;
+	        while(i<nohs.get(j).getEClosure().size()){
+	            System.out.print(nohs.get(j).getEClosure().get(i).getName() + " ;");
+	            i++;
+	        }
+	        System.out.print("\n");
+	        j++;
+	    }
+	}
+	
 	public static void main(String[] args){
 		LabForster lab = new LabForster();	
-		 //Inserir aqui a expressão desejada
-		lab.getAFNDfromRegex("A*B*C*");
+		 //Inserir aqui a expressï¿½o desejada
+		lab.getAFNDfromRegex("(a+b)*bb(b+a)*");
 		for(int i =0; i<nohs.size(); i++)
 			nohs.get(i).printCaminhos();
+			
+		printEClosure();
 	
 	}
 }
