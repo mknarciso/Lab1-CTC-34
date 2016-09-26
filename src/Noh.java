@@ -5,6 +5,22 @@ import java.util.List;
 public class Noh {
 	private Integer nome = -1;
 	private List<Caminho> caminhos = new ArrayList<Caminho>();
+	private List<Noh> e_closure = new ArrayList<Noh>();
+	
+	public void updateEClosure(){
+	    int j=0;
+	    e_closure = new ArrayList<Noh>();
+	    while(j<caminhos.size()){
+	        if(caminhos.get(j).getArco()=="&"){
+	            e_closure.add(caminhos.get(j).getDestino());
+	        }
+	        j++;
+	    }
+	}
+	
+	public List<Noh> getEClosure(){
+	    return e_closure;
+	}
 	
 	public Noh (int nome){
 		this.nome = nome;
@@ -21,10 +37,12 @@ public class Noh {
 	public void addCaminho (Noh destino, String arco){
 		Caminho caminho = new Caminho (arco, destino);
 		this.caminhos.add(caminho);
+		this.updateEClosure();
 	}
 	
 	public void removeCaminho(Caminho caminho ){
 		caminhos.remove(caminho);
+		this.updateEClosure();
 	}
 	
 	public List<Caminho> getCaminhos(){
