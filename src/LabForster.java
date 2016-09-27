@@ -265,16 +265,35 @@ public class LabForster {
 	    System.out.print("\n");
 	}
 	public void prettyPrintNohsList(List<Noh> lista){
-	    System.out.print("Estados Finais (Reunidos): ");
+	    boolean aceita = false;
+	    System.out.print("Estados Finais: ");
 	    List<Integer> numberList = new ArrayList<Integer>();
 	    for(int j=0;j<lista.size();j++){
 	        if(!numberList.contains(lista.get(j).getName()))
     	        numberList.add(lista.get(j).getName());
+    	    if(lista.get(j).isAceitacao())
+    	       aceita = true;
 	    } 
 	    for(int j=0;j<numberList.size();j++){
 	        System.out.print(numberList.get(j)+"; ");
 	    } 
-	    System.out.print("\n");
+	    if(aceita)
+	       System.out.print(" -> Cadeia Aceita!\n");
+	    else
+	       System.out.print(" -> Cadeia Não Aceita!\n");
+	       
+	    
+	}
+	
+	public void doAllTests(){
+        System.out.println("Test: ab :");
+        prettyPrintNohsList(getFirstNoh().testString("ab"));
+        System.out.println("Test: abb :");
+        prettyPrintNohsList(getFirstNoh().testString("abb"));
+        System.out.println("Test: bba :");
+        prettyPrintNohsList(getFirstNoh().testString("bba"));
+        System.out.println("Test: abba :");
+        prettyPrintNohsList(getFirstNoh().testString("abba"));
 	}
 	
 	public static void main(String[] args){
@@ -288,28 +307,28 @@ public class LabForster {
 		System.out.println("\nRegex: (a+b)*bb(b+a)*");
 		bat1.getAFNDfromRegex("(a+b)*bb(b+a)*");
         bat1.printAllCaminhos();
-        System.out.println("Test: ab :");
-        bat1.prettyPrintNohsList(bat1.getFirstNoh().testString("ab"));
-        System.out.println("Test: abb :");
-        bat1.prettyPrintNohsList(bat1.getFirstNoh().testString("abb"));
+        bat1.doAllTests();
 		//bat1.printEClosure();	
 		// Teste 2
 		LabForster bat2 = new LabForster();
 		System.out.println("\nRegex: (a(b+c))*");
 		bat2.getAFNDfromRegex("(a(b+c))*");
         bat2.printAllCaminhos();
+        bat2.doAllTests();
 		//bat2.printEClosure();	
 		// Teste 3
 		LabForster bat3 = new LabForster();
 		System.out.println("\nRegex: a*b+b*a");
 		bat3.getAFNDfromRegex("a*b+b*a");
         bat3.printAllCaminhos();
+        bat3.doAllTests();
 		//bat3.printEClosure();	
 		// Teste 4
 		LabForster bat4 = new LabForster();
 		System.out.println("\nRegex: a*b*c*");
 		bat4.getAFNDfromRegex("a*b*c*");
         bat4.printAllCaminhos();
+        bat4.doAllTests();
 		//bat4.printEClosure();	
 	}
 }
