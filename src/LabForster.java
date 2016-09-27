@@ -228,18 +228,21 @@ public class LabForster {
 		return !pilhaChar.isEmpty();	
 	}
 	
+	public void updateClosures(){
+	    for(int j=0;j<nohs.size();j++){
+	        nohs.get(j).testClosure();
+	    }
+	}
+	
 	public void printEClosure(){
-	    int j=0;
+	    updateClosures();
 	    System.out.println("e-Closures:");
-	    while(j<nohs.size()){
+	    for(int j=0;j<nohs.size();j++){
 	        System.out.print(nohs.get(j).getName()+": ");
-	        int i=0;
-	        while(i<nohs.get(j).getEClosure().size()){
+	        for(int i=0;i<nohs.get(j).getEClosure().size();i++){
 	            System.out.print(nohs.get(j).getEClosure().get(i).getName() + " ;");
-	            i++;
 	        }
 	        System.out.print("\n");
-	        j++;
 	    }
 	}
 	
@@ -296,39 +299,102 @@ public class LabForster {
         prettyPrintNohsList(getFirstNoh().testString("abba"));
 	}
 	
+	public void step2(){
+	    for(int i=0;i<nohs.size();i++){
+	        for(int j=0;j<nohs.get(i).getCaminhos().size();j++){
+	            for(int k=0;k<nohs.get(i).getCaminhos().get(j).getDestino().getEClosure().size();k++){
+	                if(nohs.get(i).getCaminhos().get(j).getDestino().getEClosure().get(k)
+	                != nohs.get(i).getCaminhos().get(j).getDestino()){
+	                    nohs.get(i).addCaminho(
+	                       nohs.get(i).getCaminhos().get(j).getDestino().getEClosure().get(k),
+	                       nohs.get(i).getCaminhos().get(j).getArco()
+	                    );
+	                }
+	            }
+	        }
+	    }
+	}
+	public void step3(){
+	    for(int x=0;x<nohs.size();x++){
+	        for(int y=0;y<nohs.get(x).getEClosure().size();y++){
+	            for(int a=0;a<nohs.get(x).getEClosure().get(y).getCaminhos().size();a++){
+	                //if(nohs.get(i).getCaminhos().get(j).getDestino().getEClosure().get(k)
+	                //!= nohs.get(i).getCaminhos().get(j).getDestino()){
+	                    nohs.get(x).addCaminho(
+	                       nohs.get(x).getEClosure().get(y).getCaminhos().get(a).getDestino(),
+	                       nohs.get(x).getEClosure().get(y).getCaminhos().get(a).getArco()
+	                    );
+	                //}
+	            }
+	        }
+	    }
+	}
+	
+	public void step4(){
+	    for(int i=0;i<nohs.size();i++){
+	        for(int j=0;j<nohs.get(i).getEClosure().size();j++){
+                if(nohs.get(i).getEClosure().get(j).isAceitacao())
+                    nohs.get(i).setAceitacao();
+	        }
+	    }
+	}
+	
+	public void removeECaminhos(){
+	    for(int i=0;i<nohs.size();i++){
+	        for(int j=0;j<nohs.get(i).getCaminhos().size();j++){
+	            if(nohs.get(i).getCaminhos().get(j).getArco().equals("&")){
+	               nohs.get(i).removeCaminho(nohs.get(i).getCaminhos().get(j));
+	               j--;
+               }
+	        }
+	    }
+	}
+	
+	public void removeEpsilon(){
+	    updateClosures();
+	    printEClosure();
+	    step2();
+	    step3();
+	    step4();
+	    printAllCaminhos();
+	    removeECaminhos();
+	    printAllCaminhos();
+	}
+	
 	public static void main(String[] args){
 		LabForster ex1 = new LabForster();
 		System.out.println("\nRegex: ab+(b+c)*");
 		ex1.getAFNDfromRegex("ab+(b+c)*");
         ex1.printAllCaminhos();
-		//ex1.printEClosure();
+        ex1.doAllTests();
+		ex1.removeEpsilon();	
 		// Teste 1
 		LabForster bat1 = new LabForster();
 		System.out.println("\nRegex: (a+b)*bb(b+a)*");
 		bat1.getAFNDfromRegex("(a+b)*bb(b+a)*");
         bat1.printAllCaminhos();
         bat1.doAllTests();
-		//bat1.printEClosure();	
+		bat1.removeEpsilon();	
 		// Teste 2
 		LabForster bat2 = new LabForster();
 		System.out.println("\nRegex: (a(b+c))*");
 		bat2.getAFNDfromRegex("(a(b+c))*");
         bat2.printAllCaminhos();
         bat2.doAllTests();
-		//bat2.printEClosure();	
+		bat2.removeEpsilon();	
 		// Teste 3
 		LabForster bat3 = new LabForster();
 		System.out.println("\nRegex: a*b+b*a");
 		bat3.getAFNDfromRegex("a*b+b*a");
         bat3.printAllCaminhos();
         bat3.doAllTests();
-		//bat3.printEClosure();	
+		bat3.removeEpsilon();		
 		// Teste 4
 		LabForster bat4 = new LabForster();
 		System.out.println("\nRegex: a*b*c*");
 		bat4.getAFNDfromRegex("a*b*c*");
         bat4.printAllCaminhos();
         bat4.doAllTests();
-		//bat4.printEClosure();	
+		bat4.removeEpsilon();	
 	}
 }
